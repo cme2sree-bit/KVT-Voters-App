@@ -22,7 +22,10 @@ def search():
     if request.method == 'POST':
         query = request.form['q'].strip().lower()
         df = read_voters()
-        results = df[(df['Name'].str.lower().str.contains(query)) | (df["Guardian's Name"].str.lower().str.contains(query))].to_dict('records')
+        results = df[
+            (df['Name'].str.lower().str.contains(query)) |
+            (df["Guardian's Name"].str.lower().str.contains(query))
+        ].to_dict('records')
     return render_template('search.html', results=results)
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -36,7 +39,7 @@ def add():
             'House Name': request.form['house_name'],
             'Political Party': request.form['party']
         }
-        df = df.append(new_entry, ignore_index=True)
+        df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
         write_voters(df)
         return redirect(url_for('home'))
     return render_template('add.html')
@@ -58,16 +61,15 @@ def edit(index):
 @app.route('/delete/<int:index>')
 def delete(index):
     df = read_voters()
-    df = df.drop(index)
-    write_voters(df.reset_index(drop=True))
+    df = df.drop(index).reset_index(drop=True)
+    write_voters(df)
     return redirect(url_for('home'))
 
 @app.route('/summary')
 def summary():
     df = read_voters()
-    total = len(df)
-    summary = df['Political Party'].value_counts().to_dict()
-    return render_template('summary.html', total=total, summary=summary)
+    parties = df['Political Party'].value_counts().to_dict()
+    return render_template('summary.html', parties=parties)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
