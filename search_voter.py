@@ -69,3 +69,8 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
+import pandas as pd
+
+# Read CSV file (file name same as your GitHub repo)
+df = pd.read_csv("sec.kerala.gov.csv", encoding="utf-8")
+voters = df.to_dict('records')
