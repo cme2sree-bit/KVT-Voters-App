@@ -1,20 +1,8 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container pt-4">
-  <h3>Add Voter</h3>
-  <form method="POST">
-    <div class="mb-2"><input class="form-control" name="name" placeholder="Name" required></div>
-    <div class="mb-2"><input class="form-control" name="guardian" placeholder="Guardian" required></div>
-    <div class="mb-2"><input class="form-control" name="houseno" placeholder="House No" required></div>
-    <div class="mb-2">
-      <select class="form-control" name="party" required>
-        <option value="">Select Party</option>
-        <option value="LDF">LDF</option>
-        <option value="UDF">UDF</option>
-        <option value="NDA">NDA</option>
-      </select>
-    </div>
-    <button class="btn btn-primary" type="submit">Add Voter</button>
-  </form>
-</div>
-{% endblock %}
+<form method="POST" action="/add">
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="text" name="guardian" placeholder="Guardian's Name" required>
+    <input type="text" name="house_no" placeholder="House No" required>
+    <input type="text" name="house_name" placeholder="House Name" required>
+    <input type="text" name="party" placeholder="Political Party" required>
+    <button type="submit">Add Voter</button>
+</form>
