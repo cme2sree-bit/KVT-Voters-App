@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container pt-4">
+  <h3>Vote Summary</h3>
+  <ul>
+    <li>LDF: {{party_counts.LDF}}</li>
+    <li>UDF: {{party_counts.UDF}}</li>
+    <li>NDA: {{party_counts.NDA}}</li>
+    <li><b>Total Votes: {{total_votes}}</b></li>
+  </ul>
+</div>
+{% endblock %}

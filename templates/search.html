@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container pt-4">
+  <h3>Voter Lookup</h3>
+  <form method="POST">
+    <input type="text" name="query" placeholder="Name, House No, Party" value="{{query}}">
+    <button type="submit">Search</button>
+  </form>
+  {% if result %}
+    <table border="1">
+      <tr>
+        <th>Name</th><th>Guardian</th><th>House No</th><th>Party</th>
+      </tr>
+      {% for voter in result %}
+      <tr>
+        <td>{{voter.name}}</td>
+        <td>{{voter.guardian}}</td>
+        <td>{{voter.houseno}}</td>
+        <td>{{voter.party}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% elif query %}
+    <p>No results found.</p>
+  {% endif %}
+</div>
+{% endblock %}

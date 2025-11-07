@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container pt-4">
+  <h3>Voter List</h3>
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>#</th><th>Name</th><th>Guardian</th><th>House No</th><th>Party</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for voter in voters %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ voter.name }}</td>
+        <td>{{ voter.guardian }}</td>
+        <td>{{ voter.houseno }}</td>
+        <td>{{ voter.party }}</td>
+        <td>
+          <a href="/edit/{{voter.houseno}}" class="btn btn-warning btn-sm">Edit</a>
+          <a href="/delete/{{voter.houseno}}" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

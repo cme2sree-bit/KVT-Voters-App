@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container pt-4">
+  <h3>Edit Voter {{voter.houseno}}</h3>
+  <form method="POST">
+    <div class="mb-2"><input class="form-control" name="name" value="{{voter.name}}" required></div>
+    <div class="mb-2"><input class="form-control" name="guardian" value="{{voter.guardian}}" required></div>
+    <div class="mb-2"><input class="form-control" name="houseno" value="{{voter.houseno}}" readonly></div>
+    <div class="mb-2">
+      <select class="form-control" name="party">
+        <option value="LDF" {% if voter.party=='LDF' %}selected{% endif %}>LDF</option>
+        <option value="UDF" {% if voter.party=='UDF' %}selected{% endif %}>UDF</option>
+        <option value="NDA" {% if voter.party=='NDA' %}selected{% endif %}>NDA</option>
+      </select>
+    </div>
+    <button class="btn btn-success" type="submit">Save Changes</button>
+  </form>
+</div>
+{% endblock %}

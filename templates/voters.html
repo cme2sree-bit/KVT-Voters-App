@@ -1,0 +1,28 @@
+<h2>All Voters</h2>
+<table border=1>
+  <tr>
+    <th>Serial No</th>
+    <th>Name</th>
+    <th>Guardian's Name</th>
+    <th>OldWard/House No.</th>
+    <th>House Name</th>
+    <th>Political Party</th>
+    <th>Actions</th>
+  </tr>
+  {% for v in voters %}
+  <tr>
+    <td>{{ v['Serial No'] }}</td>
+    <td>{{ v['Name'] }}</td>
+    <td>{{ v["Guardian's Name"] }}</td>
+    <td>{{ v["OldWard No/ House No."] }}</td>
+    <td>{{ v["House Name"] }}</td>
+    <td>{{ v["Political Party"] }}</td>
+    <td>
+      {% if session.get('admin') %}
+        <a href="/edit/{{ v['Serial No'] }}">Edit</a>
+        <a href="/delete/{{ v['Serial No'] }}">Delete</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
