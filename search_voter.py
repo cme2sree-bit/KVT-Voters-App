@@ -1,76 +1,73 @@
 from flask import Flask, render_template, request, redirect, url_for
+import pandas as pd
 
 app = Flask(__name__)
+FILENAME = "sec.kerala.gov.csv"
 
-voters = [
-    {"name": "Ramesh", "guardian": "Krishna", "houseno": "101", "party": "LDF"},
-    {"name": "Suresh", "guardian": "Gopalan", "houseno": "102", "party": "UDF"},
-    {"name": "Rajesh", "guardian": "Ravi", "houseno": "103", "party": "NDA"}
-]
+def read_voters():
+    return pd.read_csv(FILENAME, encoding="utf-8")
 
-@app.route("/")
+def write_voters(df):
+    df.to_csv(FILENAME, encoding="utf-8", index=False)
+
+@app.route('/')
 def home():
-    return render_template("home.html", voters=voters)
+    df = read_voters()
+    voters = df.to_dict('records')
+    return render_template('home.html', voters=voters)
 
-@app.route("/search", methods=["GET", "POST"])
-def search_voter():
-    result = []
-    query = ""
-    if request.method == "POST":
-        query = request.form["query"].lower()
-        for voter in voters:
-            if query in voter["name"].lower() or query in voter["houseno"].lower() or query in voter["party"].lower():
-                result.append(voter)
-    return render_template("search.html", result=result, query=query)
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    results = []
+    if request.method == 'POST':
+        query = request.form['q'].strip().lower()
+        df = read_voters()
+        results = df[(df['Name'].str.lower().str.contains(query)) | (df["Guardian's Name"].str.lower().str.contains(query))].to_dict('records')
+    return render_template('search.html', results=results)
 
-@app.route("/add", methods=["GET", "POST"])
-def add_voter():
-    if request.method == "POST":
-        voters.append({
-            "name": request.form["name"],
-            "guardian": request.form["guardian"],
-            "houseno": request.form["houseno"],
-            "party": request.form["party"]
-        })
-        return redirect(url_for("home"))
-    return render_template("add.html")
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    if request.method == 'POST':
+        df = read_voters()
+        new_entry = {
+            'Name': request.form['name'],
+            "Guardian's Name": request.form['guardian'],
+            'House No': request.form['house_no'],
+            'House Name': request.form['house_name'],
+            'Political Party': request.form['party']
+        }
+        df = df.append(new_entry, ignore_index=True)
+        write_voters(df)
+        return redirect(url_for('home'))
+    return render_template('add.html')
 
-@app.route("/edit/<houseno>", methods=["GET", "POST"])
-def edit_voter(houseno):
-    voter = next((v for v in voters if v["houseno"] == houseno), None)
-    if not voter:
-        return "Voter not found!", 404
-    if request.method == "POST":
-        voter["name"] = request.form["name"]
-        voter["guardian"] = request.form["guardian"]
-        voter["party"] = request.form["party"]
-        return redirect(url_for("home"))
-    return render_template("edit.html", voter=voter)
+@app.route('/edit/<int:index>', methods=['GET', 'POST'])
+def edit(index):
+    df = read_voters()
+    if request.method == 'POST':
+        df.at[index, 'Name'] = request.form['name']
+        df.at[index, "Guardian's Name"] = request.form['guardian']
+        df.at[index, 'House No'] = request.form['house_no']
+        df.at[index, 'House Name'] = request.form['house_name']
+        df.at[index, 'Political Party'] = request.form['party']
+        write_voters(df)
+        return redirect(url_for('home'))
+    voter = df.iloc[index].to_dict()
+    return render_template('edit.html', voter=voter, index=index)
 
-@app.route("/delete/<houseno>")
-def delete_voter(houseno):
-    global voters
-    voters = [v for v in voters if v["houseno"] != houseno]
-    return redirect(url_for("home"))
+@app.route('/delete/<int:index>')
+def delete(index):
+    df = read_voters()
+    df = df.drop(index)
+    write_voters(df.reset_index(drop=True))
+    return redirect(url_for('home'))
 
-@app.route("/summary")
-def vote_summary():
-    party_counts = {"LDF": 0, "UDF": 0, "NDA": 0}
-    for voter in voters:
-        party = voter["party"]
-        if party in party_counts:
-            party_counts[party] += 1
-    total_votes = sum(party_counts.values())
-    return render_template("summary.html", party_counts=party_counts, total_votes=total_votes)
-
-@app.route("/logout")
-def logout():
-    return "Logout working!"
+@app.route('/summary')
+def summary():
+    df = read_voters()
+    total = len(df)
+    summary = df['Political Party'].value_counts().to_dict()
+    return render_template('summary.html', total=total, summary=summary)
 
 if __name__ == "__main__":
     app.run(debug=True)
-import pandas as pd
-
-# Read CSV file (file name same as your GitHub repo)
-df = pd.read_csv("sec.kerala.gov.csv", encoding="utf-8")
-voters = df.to_dict('records')
