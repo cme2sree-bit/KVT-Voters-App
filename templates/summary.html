@@ -1,12 +1,18 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container pt-4">
-  <h3>Vote Summary</h3>
-  <ul>
-    <li>LDF: {{party_counts.LDF}}</li>
-    <li>UDF: {{party_counts.UDF}}</li>
-    <li>NDA: {{party_counts.NDA}}</li>
-    <li><b>Total Votes: {{total_votes}}</b></li>
-  </ul>
-</div>
-{% endblock %}
+<h2>Vote Summary</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Political Party</th>
+            <th>Votes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for party, count in parties.items() %}
+        <tr>
+            <td>{{ party }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="/">Home</a>
