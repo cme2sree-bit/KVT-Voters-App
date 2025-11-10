@@ -1,8 +1,15 @@
 body {
-  background-color: #111;
-  color: #fff;
-  font-family: 'Noto Sans Malayalam', sans-serif;
+  background: #111 !important;
+  color: #fff !important;
+  font-family: 'Noto Sans Malayalam', sans-serif !important;
 }
+.heading-purple { color: #B620F1 !important; }
+.heading-blue { color: #1B62F1 !important; }
+.heading-red { color: #F15440 !important; }
+.btn-add { background: #B620F1; color: #fff; }
+.btn-edit { background: #1B62F1; color: #fff; }
+.btn-delete { background: #F15440; color: #fff; }
+
 
 @charset "UTF-8";
 /*!
