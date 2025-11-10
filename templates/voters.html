@@ -1,28 +1,39 @@
-<h2>All Voters</h2>
-<table border=1>
-  <tr>
-    <th>Serial No</th>
-    <th>Name</th>
-    <th>Guardian's Name</th>
-    <th>OldWard/House No.</th>
-    <th>House Name</th>
-    <th>Political Party</th>
-    <th>Actions</th>
-  </tr>
-  {% for v in voters %}
-  <tr>
-    <td>{{ v['Serial No'] }}</td>
-    <td>{{ v['Name'] }}</td>
-    <td>{{ v["Guardian's Name"] }}</td>
-    <td>{{ v["OldWard No/ House No."] }}</td>
-    <td>{{ v["House Name"] }}</td>
-    <td>{{ v["Political Party"] }}</td>
-    <td>
-      {% if session.get('admin') %}
-        <a href="/edit/{{ v['Serial No'] }}">Edit</a>
-        <a href="/delete/{{ v['Serial No'] }}">Delete</a>
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Voter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.css') }}">
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Noto Sans Malayalam', sans-serif;
+    }
+    input, label {
+      display:block;
+      margin:10px 0;
+    }
+    .btn-edit, .btn-delete, .btn-add {
+      color: #fff; padding: 10px; border:none; cursor:pointer;
+    }
+    .btn-edit { background: #1B62F1; }
+    .btn-delete { background:#F15440; }
+    .btn-add { background:#B620F1; }
+  </style>
+</head>
+<body>
+  <h1>Edit Voter</h1>
+  <form method="POST">
+    <label>പേര്:</label>
+    <input type="text" name="name" value="{{ voter.name }}" required>
+    <label>വാർഡ്:</label>
+    <input type="text" name="ward" value="{{ voter.ward }}" required>
+    <label>കക്ഷി:</label>
+    <input type="text" name="party" value="{{ voter.party }}" required><br><br>
+    <button type="submit" class="btn-edit">Save</button>
+    <a href="/" style="margin-left:20px; color:#fff;">Cancel</a>
+  </form>
+</body>
+</html>
