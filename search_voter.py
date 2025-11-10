@@ -4,11 +4,18 @@ import pandas as pd
 app = Flask(__name__)
 DATA_PATH = 'sec.kerala.gov.csv'
 
+def get_dataframe():
+    df = pd.read_csv(DATA_PATH)
+    # id column add if missing
+    if 'id' not in df.columns:
+        df['id'] = df.index + 1
+    return df
+
 @app.route('/')
 def home():
-    df = pd.read_csv(DATA_PATH)
+    df = get_dataframe()
     total_voters = df.shape[0]
-    party_counts = df['party'].value_counts()
+    party_counts = df['Political Party'].value_counts()
 
     if len(party_counts) >= 2:
         top_counts = party_counts.nlargest(2).values
@@ -19,7 +26,6 @@ def home():
         winning_margin = 0
 
     voters = df.to_dict('records')
-    # Admin simulation - replace with real auth in production
     is_admin = True
 
     return render_template('summary.html', voters=voters, total_voters=total_voters,
@@ -27,25 +33,37 @@ def home():
 
 @app.route('/add', methods=['POST'])
 def add_voter():
-    df = pd.read_csv(DATA_PATH)
+    df = get_dataframe()
     name = request.form.get('name')
-    ward = request.form.get('ward')
+    guardian = request.form.get("guardian")
+    house_no = request.form.get("house_no")
+    house_name = request.form.get("house_name")
     party = request.form.get('party')
-
-    new_id = df['id'].max() + 1 if 'id' in df.columns else len(df) + 1
-    new_voter = {'id': new_id, 'name': name, 'ward': ward, 'party': party}
+    new_id = df['id'].max() + 1
+    new_voter = {
+        'id': new_id,
+        'Name': name,
+        "Guardian's Name": guardian,
+        "House No.": house_no,
+        "House Name": house_name,
+        'Political Party': party
+    }
     df = df.append(new_voter, ignore_index=True)
     df.to_csv(DATA_PATH, index=False)
     return redirect('/')
 
 @app.route('/edit/<int:voter_id>', methods=['GET', 'POST'])
 def edit_voter(voter_id):
-    df = pd.read_csv(DATA_PATH)
+    df = get_dataframe()
     if request.method == 'POST':
         name = request.form.get('name')
-        ward = request.form.get('ward')
+        guardian = request.form.get("guardian")
+        house_no = request.form.get("house_no")
+        house_name = request.form.get("house_name")
         party = request.form.get('party')
-        df.loc[df['id'] == voter_id, ['name', 'ward', 'party']] = [name, ward, party]
+        df.loc[df['id'] == voter_id, ['Name', "Guardian's Name", "House No.", "House Name", 'Political Party']] = [
+            name, guardian, house_no, house_name, party
+        ]
         df.to_csv(DATA_PATH, index=False)
         return redirect('/')
     else:
@@ -54,7 +72,7 @@ def edit_voter(voter_id):
 
 @app.route('/delete/<int:voter_id>', methods=['POST'])
 def delete_voter(voter_id):
-    df = pd.read_csv(DATA_PATH)
+    df = get_dataframe()
     df = df[df['id'] != voter_id]
     df.to_csv(DATA_PATH, index=False)
     return redirect('/')
