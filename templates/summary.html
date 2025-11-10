@@ -40,3 +40,13 @@
     {% endfor %}
   </tbody>
 </table>
+<td>
+  {% if is_admin %}
+    <form method="POST" action="/edit/{{ voter.id }}" style="display:inline;">
+      <button class="btn-edit" type="submit">Edit</button>
+    </form>
+    <form method="POST" action="/delete/{{ voter.id }}" style="display:inline;">
+      <button class="btn-delete" type="submit" onclick="return confirm('Delete voter?');">Delete</button>
+    </form>
+  {% endif %}
+</td>
