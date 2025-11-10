@@ -5,18 +5,9 @@
   <title>Edit Voter</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      background: #111;
-      color: #fff;
-      font-family: 'Noto Sans Malayalam', sans-serif;
-    }
-    input, label {
-      display:block;
-      margin:10px 0;
-    }
-    .btn-edit, .btn-delete, .btn-add {
-      color: #fff; padding: 10px; border:none; cursor:pointer;
-    }
+    body { background: #111; color: #fff; font-family: 'Noto Sans Malayalam', sans-serif; }
+    input, label { display:block; margin:10px 0; }
+    .btn-edit, .btn-delete, .btn-add { color: #fff; padding: 10px; border:none; cursor:pointer; }
     .btn-edit { background: #1B62F1; }
     .btn-delete { background:#F15440; }
     .btn-add { background:#B620F1; }
@@ -26,17 +17,17 @@
   <h1>Edit Voter</h1>
   <form method="POST">
     <label>പേര്:</label>
-    <input type="text" name="name" value="{{ voter['Name'] }}" required>
+    <input type="text" name="name" value="{{ voter['Name'] or '' }}" required>
     <label>Guardian:</label>
-    <input type="text" name="guardian" value="{{ voter["Guardian's Name"] }}" required>
+    <input type="text" name="guardian" value="{{ voter["Guardian's Name"] or '' }}" required>
     <label>House No.:</label>
-    <input type="text" name="house_no" value="{{ voter["House No."] }}" required>
+    <input type="text" name="house_no" value="{{ voter["House No."] or '' }}" required>
     <label>House Name:</label>
-    <input type="text" name="house_name" value="{{ voter["House Name"] }}" required>
+    <input type="text" name="house_name" value="{{ voter["House Name"] or '' }}" required>
     <label>Political Party:</label>
-    <input type="text" name="party" value="{{ voter["Political Party"] }}" required><br><br>
+    <input type="text" name="party" value="{{ voter["Political Party"] or '' }}" required><br><br>
     <button type="submit" class="btn-edit">Save</button>
-    <a href="/" style="margin-left:20px; color:#fff;">Cancel</a>
+    <a href="/" class="btn" style="margin-left:20px;">Back to Home</a>
   </form>
 </body>
 </html>
