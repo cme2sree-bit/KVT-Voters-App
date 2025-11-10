@@ -1,28 +1,33 @@
-<h2>All Voters</h2>
-<table border=1>
-  <tr>
-    <th>Serial No</th>
-    <th>Name</th>
-    <th>Guardian's Name</th>
-    <th>OldWard/House No.</th>
-    <th>House Name</th>
-    <th>Political Party</th>
-    <th>Actions</th>
-  </tr>
-  {% for v in voters %}
-  <tr>
-    <td>{{ v['Serial No'] }}</td>
-    <td>{{ v['Name'] }}</td>
-    <td>{{ v["Guardian's Name"] }}</td>
-    <td>{{ v["OldWard No/ House No."] }}</td>
-    <td>{{ v["House Name"] }}</td>
-    <td>{{ v["Political Party"] }}</td>
-    <td>
-      {% if session.get('admin') %}
-        <a href="/edit/{{ v['Serial No'] }}">Edit</a>
-        <a href="/delete/{{ v['Serial No'] }}">Delete</a>
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Voter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #111; color: #fff; font-family: 'Noto Sans Malayalam', sans-serif; }
+    input, label { display:block; margin:10px 0; }
+    .btn-edit, .btn-delete, .btn-add { color: #fff; padding: 10px; border:none; cursor:pointer; }
+    .btn-edit { background: #1B62F1; }
+    .btn-delete { background:#F15440; }
+    .btn-add { background:#B620F1; }
+  </style>
+</head>
+<body>
+  <h1>Edit Voter</h1>
+  <form method="POST">
+    <label>പേര്:</label>
+    <input type="text" name="name" value="{{ voter['Name'] or '' }}" required>
+    <label>Guardian:</label>
+    <input type="text" name="guardian" value="{{ voter["Guardian's Name"] or '' }}" required>
+    <label>House No.:</label>
+    <input type="text" name="house_no" value="{{ voter["House No."] or '' }}" required>
+    <label>House Name:</label>
+    <input type="text" name="house_name" value="{{ voter["House Name"] or '' }}" required>
+    <label>Political Party:</label>
+    <input type="text" name="party" value="{{ voter["Political Party"] or '' }}" required><br><br>
+    <button type="submit" class="btn-edit">Save</button>
+    <a href="/" class="btn" style="margin-left:20px;">Back to Home</a>
+  </form>
+</body>
+</html>

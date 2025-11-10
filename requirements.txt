@@ -1,4 +1,4 @@
-Flask
-pandas
-openpyxl
+flask
 gunicorn
+pandas
+# your other dependencies

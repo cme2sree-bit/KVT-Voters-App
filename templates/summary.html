@@ -1,12 +1,77 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container pt-4">
-  <h3>Vote Summary</h3>
-  <ul>
-    <li>LDF: {{party_counts.LDF}}</li>
-    <li>UDF: {{party_counts.UDF}}</li>
-    <li>NDA: {{party_counts.NDA}}</li>
-    <li><b>Total Votes: {{total_votes}}</b></li>
-  </ul>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <title>KVT Voters</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #111; color: #fff; font-family: 'Noto Sans Malayalam', sans-serif; }
+    .heading-purple { color: #B620F1; }
+    .heading-blue { color: #1B62F1; }
+    .heading-red { color: #F15440; }
+    .btn-add { background: #B620F1; color: #fff; }
+    .btn-edit { background: #1B62F1; color: #fff; }
+    .btn-delete { background: #F15440; color: #fff; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #444; padding: 8px; text-align:left; }
+  </style>
+</head>
+<body>
+  <h1 class="heading-purple">KVT Voters List</h1>
+  <h2 class="heading-blue">മൊത്തം വോട്ടർമാർ: {{ total_voters }}</h2>
+  <h3 class="heading-red">Winning Margin: {{ winning_margin }}</h3>
+
+  <button class="btn-add" onclick="document.getElementById('addForm').style.display = 'block'">Add Voter</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>പേര്</th>
+        <th>Guardian</th>
+        <th>House No.</th>
+        <th>House Name</th>
+        <th>Political Party</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for voter in voters %}
+      <tr>
+        <td>{{ voter['Name'] or '' }}</td>
+        <td>{{ voter["Guardian's Name"] or '' }}</td>
+        <td>{{ voter["House No."] or '' }}</td>
+        <td>{{ voter["House Name"] or '' }}</td>
+        <td>{{ voter["Political Party"] or '' }}</td>
+        <td>
+          <form style="display:inline" method="POST" action="/delete/{{ voter.id }}">
+            <button class="btn-delete" onclick="return confirm('Delete voter?')">Delete</button>
+          </form>
+          <form style="display:inline" method="GET" action="/edit/{{ voter.id }}">
+            <button class="btn-edit">Edit</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Add Voter Form -->
+  <div id="addForm" style="display:none; padding:20px; background:#222; margin-top:20px;">
+    <form method="POST" action="/add">
+      <h3>Add New Voter</h3>
+      <label>പേര്:</label>
+      <input type="text" name="name" required>
+      <label>Guardian:</label>
+      <input type="text" name="guardian" required>
+      <label>House No.:</label>
+      <input type="text" name="house_no" required>
+      <label>House Name:</label>
+      <input type="text" name="house_name" required>
+      <label>Political Party:</label>
+      <input type="text" name="party" required><br><br>
+      <button type="submit" class="btn-add">Add</button>
+      <button type="button" onclick="document.getElementById('addForm').style.display = 'none'">Cancel</button>
+    </form>
+  </div>
+</body>
+</html>
