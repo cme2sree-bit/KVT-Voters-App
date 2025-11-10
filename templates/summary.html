@@ -1,52 +1,74 @@
-<h2>Vote Summary</h2>
-<table>
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <title>KVT Voters</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.css') }}">
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Noto Sans Malayalam', sans-serif;
+    }
+    .heading-purple { color: #B620F1; }
+    .heading-blue { color: #1B62F1; }
+    .heading-red { color: #F15440; }
+    .btn-add { background: #B620F1; color: #fff; }
+    .btn-edit { background: #1B62F1; color: #fff; }
+    .btn-delete { background: #F15440; color: #fff; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #444; padding: 8px; text-align:left; }
+  </style>
+</head>
+<body>
+  <h1 class="heading-purple">KVT Voters List</h1>
+  <h2 class="heading-blue">തൊട്ടടുത്തപ്പോഴുള്ള വോട്ടർ എണ്ണം: {{ total_voters }}</h2>
+  <h3 class="heading-red">വിജയ മാർജിൻ: {{ winning_margin }}</h3>
+
+  {% if is_admin %}
+  <button class="btn-add" onclick="document.getElementById('addForm').style.display = 'block'">Add Voter</button>
+  {% endif %}
+
+  <table>
     <thead>
-        <tr>
-            <th>Political Party</th>
-            <th>Votes</th>
-        </tr>
+      <tr><th>പേര്</th><th>വാർഡ്</th><th>കക്ഷി</th><th>Actions</th></tr>
     </thead>
     <tbody>
-        {% for party, count in parties.items() %}
-        <tr>
-            <td>{{ party }}</td>
-            <td>{{ count }}</td>
-        </tr>
-        {% endfor %}
+      {% for voter in voters %}
+      <tr>
+        <td>{{ voter.name }}</td>
+        <td>{{ voter.ward }}</td>
+        <td>{{ voter.party }}</td>
+        <td>
+          {% if is_admin %}
+          <form style="display:inline" method="POST" action="/delete/{{ voter.id }}">
+            <button class="btn-delete" onclick="return confirm('Delete voter?')">Delete</button>
+          </form>
+          <form style="display:inline" method="GET" action="/edit/{{ voter.id }}">
+            <button class="btn-edit">Edit</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
     </tbody>
-</table>
-<a href="/">Home</a>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
-<table>
-  <thead>
-    <tr>
-      <th>പേര്</th>
-      <th>വാർഡ്</th>
-      <th>കക്ഷി</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for voter in voters %}
-    <tr>
-      <td>{{ voter.name }}</td>
-      <td>{{ voter.ward }}</td>
-      <td>{{ voter.party }}</td>
-      <td>
-        <button class="btn-edit">Edit</button>
-        <button class="btn-delete">Delete</button>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<td>
-  {% if is_admin %}
-    <form method="POST" action="/edit/{{ voter.id }}" style="display:inline;">
-      <button class="btn-edit" type="submit">Edit</button>
+  </table>
+
+  <!-- Add Voter Form -->
+  <div id="addForm" style="display:none; padding:20px; background:#222; margin-top:20px;">
+    <form method="POST" action="/add">
+      <h3>Add New Voter</h3>
+      <label>പേര്:</label><br>
+      <input type="text" name="name" required><br>
+      <label>വാർഡ്:</label><br>
+      <input type="text" name="ward" required><br>
+      <label>കക്ഷി:</label><br>
+      <input type="text" name="party" required><br><br>
+      <button type="submit" class="btn-add">Add</button>
+      <button type="button" onclick="document.getElementById('addForm').style.display = 'none'">Cancel</button>
     </form>
-    <form method="POST" action="/delete/{{ voter.id }}" style="display:inline;">
-      <button class="btn-delete" type="submit" onclick="return confirm('Delete voter?');">Delete</button>
-    </form>
-  {% endif %}
-</td>
+  </div>
+
+</body>
+</html>
