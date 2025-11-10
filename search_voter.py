@@ -73,3 +73,34 @@ def summary():
 
 if __name__ == '__main__':
     app.run(debug=True)
+from flask import Flask, render_template, request, redirect
+import pandas as pd
+
+app = Flask(__name__)
+DATA_PATH = 'sec.kerala.gov.csv'
+
+@app.route('/')
+def home():
+    df = pd.read_csv(DATA_PATH)
+    return render_template("summary.html", voters=df.to_dict('records'), is_admin=True) # admin logic as needed
+
+@app.route('/edit/<int:voter_id>', methods=['POST', 'GET'])
+def edit_voter(voter_id):
+    df = pd.read_csv(DATA_PATH)
+    if request.method == 'POST':
+        # Collect new data from form (implement form modal separately) & update voter
+        new_name = request.form.get('name')
+        df.loc[df['id'] == voter_id, 'name'] = new_name
+        # Repeat for other fields...
+        df.to_csv(DATA_PATH, index=False)
+        return redirect('/')
+    else:
+        voter = df[df['id'] == voter_id].to_dict('records')[0]
+        return render_template("edit_voter.html", voter=voter)
+
+@app.route('/delete/<int:voter_id>', methods=['POST'])
+def delete_voter(voter_id):
+    df = pd.read_csv(DATA_PATH)
+    df = df[df['id'] != voter_id]
+    df.to_csv(DATA_PATH, index=False)
+    return redirect('/')
