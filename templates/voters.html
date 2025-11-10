@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Edit Voter</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.css') }}">
   <style>
     body {
       background: #111;
@@ -27,11 +26,15 @@
   <h1>Edit Voter</h1>
   <form method="POST">
     <label>പേര്:</label>
-    <input type="text" name="name" value="{{ voter.name }}" required>
-    <label>വാർഡ്:</label>
-    <input type="text" name="ward" value="{{ voter.ward }}" required>
-    <label>കക്ഷി:</label>
-    <input type="text" name="party" value="{{ voter.party }}" required><br><br>
+    <input type="text" name="name" value="{{ voter['Name'] }}" required>
+    <label>Guardian:</label>
+    <input type="text" name="guardian" value="{{ voter["Guardian's Name"] }}" required>
+    <label>House No.:</label>
+    <input type="text" name="house_no" value="{{ voter["House No."] }}" required>
+    <label>House Name:</label>
+    <input type="text" name="house_name" value="{{ voter["House Name"] }}" required>
+    <label>Political Party:</label>
+    <input type="text" name="party" value="{{ voter["Political Party"] }}" required><br><br>
     <button type="submit" class="btn-edit">Save</button>
     <a href="/" style="margin-left:20px; color:#fff;">Cancel</a>
   </form>
