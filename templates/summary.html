@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>KVT Voters</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.css') }}">
   <style>
     body {
       background: #111;
@@ -23,32 +22,37 @@
 </head>
 <body>
   <h1 class="heading-purple">KVT Voters List</h1>
-  <h2 class="heading-blue">തൊട്ടടുത്തപ്പോഴുള്ള വോട്ടർ എണ്ണം: {{ total_voters }}</h2>
-  <h3 class="heading-red">വിജയ മാർജിൻ: {{ winning_margin }}</h3>
+  <h2 class="heading-blue">മൊത്തം വോട്ടർമാർ: {{ total_voters }}</h2>
+  <h3 class="heading-red">Winning Margin: {{ winning_margin }}</h3>
 
-  {% if is_admin %}
   <button class="btn-add" onclick="document.getElementById('addForm').style.display = 'block'">Add Voter</button>
-  {% endif %}
 
   <table>
     <thead>
-      <tr><th>പേര്</th><th>വാർഡ്</th><th>കക്ഷി</th><th>Actions</th></tr>
+      <tr>
+        <th>പേര്</th>
+        <th>Guardian</th>
+        <th>House No.</th>
+        <th>House Name</th>
+        <th>Political Party</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
       {% for voter in voters %}
       <tr>
-        <td>{{ voter.name }}</td>
-        <td>{{ voter.ward }}</td>
-        <td>{{ voter.party }}</td>
+        <td>{{ voter['Name'] }}</td>
+        <td>{{ voter["Guardian's Name"] }}</td>
+        <td>{{ voter["House No."] }}</td>
+        <td>{{ voter["House Name"] }}</td>
+        <td>{{ voter["Political Party"] }}</td>
         <td>
-          {% if is_admin %}
           <form style="display:inline" method="POST" action="/delete/{{ voter.id }}">
             <button class="btn-delete" onclick="return confirm('Delete voter?')">Delete</button>
           </form>
           <form style="display:inline" method="GET" action="/edit/{{ voter.id }}">
             <button class="btn-edit">Edit</button>
           </form>
-          {% endif %}
         </td>
       </tr>
       {% endfor %}
@@ -59,16 +63,19 @@
   <div id="addForm" style="display:none; padding:20px; background:#222; margin-top:20px;">
     <form method="POST" action="/add">
       <h3>Add New Voter</h3>
-      <label>പേര്:</label><br>
-      <input type="text" name="name" required><br>
-      <label>വാർഡ്:</label><br>
-      <input type="text" name="ward" required><br>
-      <label>കക്ഷി:</label><br>
+      <label>പേര്:</label>
+      <input type="text" name="name" required>
+      <label>Guardian:</label>
+      <input type="text" name="guardian" required>
+      <label>House No.:</label>
+      <input type="text" name="house_no" required>
+      <label>House Name:</label>
+      <input type="text" name="house_name" required>
+      <label>Political Party:</label>
       <input type="text" name="party" required><br><br>
       <button type="submit" class="btn-add">Add</button>
       <button type="button" onclick="document.getElementById('addForm').style.display = 'none'">Cancel</button>
     </form>
   </div>
-
 </body>
 </html>
