@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect
 import pandas as pd
+import os
 
 app = Flask(__name__)
 DATA_PATH = 'sec.kerala.gov.csv'
 
 def get_dataframe():
     df = pd.read_csv(DATA_PATH)
-    # id column add if missing
+    # If id column missing, add
     if 'id' not in df.columns:
         df['id'] = df.index + 1
     return df
@@ -27,7 +28,6 @@ def home():
 
     voters = df.to_dict('records')
     is_admin = True
-
     return render_template('summary.html', voters=voters, total_voters=total_voters,
                            winning_margin=winning_margin, is_admin=is_admin)
 
@@ -55,6 +55,10 @@ def add_voter():
 @app.route('/edit/<int:voter_id>', methods=['GET', 'POST'])
 def edit_voter(voter_id):
     df = get_dataframe()
+    voter_row = df[df['id'] == voter_id]
+    if voter_row.empty:
+        return render_template('error.html', message="Voter not found"), 404
+    voter = voter_row.to_dict('records')[0]
     if request.method == 'POST':
         name = request.form.get('name')
         guardian = request.form.get("guardian")
@@ -67,7 +71,6 @@ def edit_voter(voter_id):
         df.to_csv(DATA_PATH, index=False)
         return redirect('/')
     else:
-        voter = df[df['id'] == voter_id].to_dict('records')[0]
         return render_template('edit_voter.html', voter=voter)
 
 @app.route('/delete/<int:voter_id>', methods=['POST'])
@@ -77,9 +80,10 @@ def delete_voter(voter_id):
     df.to_csv(DATA_PATH, index=False)
     return redirect('/')
 
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('error.html', message="Page not found"), 404
+
 if __name__ == '__main__':
-    app.run(debug=True)
-import os
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))  # Render.com-ൽ $PORT environment variable ആണ്
+    port = int(os.environ.get('PORT', 10000))
     app.run(debug=False, host='0.0.0.0', port=port)
