@@ -5,11 +5,7 @@
   <title>KVT Voters</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      background: #111;
-      color: #fff;
-      font-family: 'Noto Sans Malayalam', sans-serif;
-    }
+    body { background: #111; color: #fff; font-family: 'Noto Sans Malayalam', sans-serif; }
     .heading-purple { color: #B620F1; }
     .heading-blue { color: #1B62F1; }
     .heading-red { color: #F15440; }
@@ -41,11 +37,11 @@
     <tbody>
       {% for voter in voters %}
       <tr>
-        <td>{{ voter['Name'] }}</td>
-        <td>{{ voter["Guardian's Name"] }}</td>
-        <td>{{ voter["House No."] }}</td>
-        <td>{{ voter["House Name"] }}</td>
-        <td>{{ voter["Political Party"] }}</td>
+        <td>{{ voter['Name'] or '' }}</td>
+        <td>{{ voter["Guardian's Name"] or '' }}</td>
+        <td>{{ voter["House No."] or '' }}</td>
+        <td>{{ voter["House Name"] or '' }}</td>
+        <td>{{ voter["Political Party"] or '' }}</td>
         <td>
           <form style="display:inline" method="POST" action="/delete/{{ voter.id }}">
             <button class="btn-delete" onclick="return confirm('Delete voter?')">Delete</button>
