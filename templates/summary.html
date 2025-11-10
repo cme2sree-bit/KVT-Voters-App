@@ -17,3 +17,26 @@
 </table>
 <a href="/">Home</a>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+<table>
+  <thead>
+    <tr>
+      <th>പേര്</th>
+      <th>വാർഡ്</th>
+      <th>കക്ഷി</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for voter in voters %}
+    <tr>
+      <td>{{ voter.name }}</td>
+      <td>{{ voter.ward }}</td>
+      <td>{{ voter.party }}</td>
+      <td>
+        <button class="btn-edit">Edit</button>
+        <button class="btn-delete">Delete</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
